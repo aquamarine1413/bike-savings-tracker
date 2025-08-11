@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bike Savings Tracker</title>
+<title>Cycle Savings Tracker</title>
 <style>
     body {
         background-color: #111;
@@ -22,8 +22,8 @@
     }
 
     .tracker {
-        width: 300px;
-        height: 50px;
+        width: 400px; /* bigger width */
+        height: 60px; /* bigger height */
         border: 3px solid white;
         background-color: black;
         position: relative;
@@ -33,26 +33,26 @@
 
     .fill {
         height: 100%;
-        background-color: #00ff88;
+        background-color: yellow; /* changed fill to yellow */
         width: 0%;
         transition: width 0.5s ease-in-out;
     }
 
     .stats {
         margin-top: 15px;
-        font-size: 18px;
+        font-size: 20px; /* slightly bigger text */
     }
 
     input {
-        padding: 8px;
+        padding: 10px;
         margin: 5px;
         border: none;
         border-radius: 4px;
     }
 
     button {
-        padding: 8px 14px;
-        background-color: #00ff88;
+        padding: 10px 16px;
+        background-color: yellow; /* match fill color */
         color: black;
         font-weight: bold;
         border: none;
@@ -61,13 +61,13 @@
     }
 
     button:hover {
-        background-color: #00cc66;
+        background-color: gold;
     }
 </style>
 </head>
 <body>
 
-<h1>🏍️ Bike Savings Tracker</h1>
+<h1>🚴‍♂️ Cycle Savings Tracker</h1>
 
 <div class="tracker">
     <div class="fill" id="fill"></div>
@@ -101,7 +101,7 @@
         }
     }
 
-    // Optional: Load saved data from browser storage
+    // Load saved data from browser storage
     window.onload = function() {
         let stored = localStorage.getItem("savedAmount");
         if (stored) {
@@ -110,7 +110,7 @@
         }
     };
 
-    // Save to browser storage whenever updated
+    // Save to browser storage every second
     setInterval(() => {
         localStorage.setItem("savedAmount", saved);
     }, 1000);
