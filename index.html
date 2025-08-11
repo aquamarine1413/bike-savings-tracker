@@ -40,8 +40,8 @@
         align-items: center;
         justify-content: center;
         font-weight: bold;
-        color: black; /* text color inside bar */
-        font-size: 18px;
+        color: black;
+        font-size: 20px;
     }
 
     .stats {
@@ -54,6 +54,7 @@
         margin: 5px;
         border: none;
         border-radius: 4px;
+        width: 150px;
     }
 
     button {
@@ -64,6 +65,7 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        margin: 5px;
     }
 
     button:hover {
@@ -84,8 +86,9 @@
 </div>
 
 <div>
-    <input type="number" id="amount" placeholder="Add amount ₹">
+    <input type="number" id="amount" placeholder="Enter amount ₹">
     <button onclick="addSavings()">Add</button>
+    <button onclick="subtractSavings()">Subtract</button>
 </div>
 
 <script>
@@ -93,8 +96,7 @@
     let saved = 0;
 
     function updateTracker() {
-        let percentage = (saved / goal) * 100;
-        if (percentage > 100) percentage = 100; // cap at 100%
+        let percentage = Math.max(0, Math.min((saved / goal) * 100, 100));
         document.getElementById("fill").style.width = percentage + "%";
         document.getElementById("fill").innerText = Math.round(percentage) + "%";
         document.getElementById("saved").innerText = saved;
@@ -104,6 +106,16 @@
         let amount = parseInt(document.getElementById("amount").value);
         if (!isNaN(amount) && amount > 0) {
             saved += amount;
+            updateTracker();
+            document.getElementById("amount").value = "";
+        }
+    }
+
+    function subtractSavings() {
+        let amount = parseInt(document.getElementById("amount").value);
+        if (!isNaN(amount) && amount > 0) {
+            saved -= amount;
+            if (saved < 0) saved = 0;
             updateTracker();
             document.getElementById("amount").value = "";
         }
