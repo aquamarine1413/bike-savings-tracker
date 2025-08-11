@@ -22,8 +22,8 @@
     }
 
     .tracker {
-        width: 400px; /* bigger width */
-        height: 60px; /* bigger height */
+        width: 400px;
+        height: 60px;
         border: 3px solid white;
         background-color: black;
         position: relative;
@@ -33,14 +33,20 @@
 
     .fill {
         height: 100%;
-        background-color: yellow; /* changed fill to yellow */
+        background-color: yellow;
         width: 0%;
         transition: width 0.5s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: black; /* text color inside bar */
+        font-size: 18px;
     }
 
     .stats {
         margin-top: 15px;
-        font-size: 20px; /* slightly bigger text */
+        font-size: 20px;
     }
 
     input {
@@ -52,7 +58,7 @@
 
     button {
         padding: 10px 16px;
-        background-color: yellow; /* match fill color */
+        background-color: yellow;
         color: black;
         font-weight: bold;
         border: none;
@@ -70,7 +76,7 @@
 <h1>🚴‍♂️ Cycle Savings Tracker</h1>
 
 <div class="tracker">
-    <div class="fill" id="fill"></div>
+    <div class="fill" id="fill">0%</div>
 </div>
 
 <div class="stats">
@@ -83,12 +89,14 @@
 </div>
 
 <script>
-    let goal = 105000; // Your target
+    let goal = 105000;
     let saved = 0;
 
     function updateTracker() {
         let percentage = (saved / goal) * 100;
+        if (percentage > 100) percentage = 100; // cap at 100%
         document.getElementById("fill").style.width = percentage + "%";
+        document.getElementById("fill").innerText = Math.round(percentage) + "%";
         document.getElementById("saved").innerText = saved;
     }
 
@@ -101,7 +109,6 @@
         }
     }
 
-    // Load saved data from browser storage
     window.onload = function() {
         let stored = localStorage.getItem("savedAmount");
         if (stored) {
@@ -110,7 +117,6 @@
         }
     };
 
-    // Save to browser storage every second
     setInterval(() => {
         localStorage.setItem("savedAmount", saved);
     }, 1000);
