@@ -1,90 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Savings Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bike Savings Tracker</title>
 <style>
     body {
-        background: #111;
+        background-color: #111;
         color: white;
         font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
     }
-    h1 { font-size: 2rem; margin-bottom: 20px; }
-    #progress-container {
-        width: 90%;
-        height: 40px;
-        background: #333;
-        border-radius: 20px;
-        margin: 20px auto;
+
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    .tracker {
+        width: 300px;
+        height: 50px;
+        border: 3px solid white;
+        background-color: black;
+        position: relative;
         overflow: hidden;
+        border-radius: 8px;
     }
-    #progress-bar {
+
+    .fill {
         height: 100%;
-        background: linear-gradient(90deg, #ff8800, #ffaa00);
+        background-color: #00ff88;
         width: 0%;
         transition: width 0.5s ease-in-out;
     }
+
+    .stats {
+        margin-top: 15px;
+        font-size: 18px;
+    }
+
     input {
-        padding: 10px;
-        font-size: 1rem;
-        margin: 10px;
-        width: 100px;
-    }
-    button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        background: #ff8800;
+        padding: 8px;
+        margin: 5px;
         border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        color: white;
+        border-radius: 4px;
     }
-    button:hover { background: #ffaa00; }
-    .amount { font-size: 1.2rem; margin-top: 10px; }
+
+    button {
+        padding: 8px 14px;
+        background-color: #00ff88;
+        color: black;
+        font-weight: bold;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #00cc66;
+    }
 </style>
 </head>
 <body>
-    <h1>💰 Savings Goal Tracker</h1>
-    <div id="progress-container">
-        <div id="progress-bar"></div>
-    </div>
-    <div class="amount" id="amount-display">₹0 / ₹105000</div>
-    
-    <input type="number" id="amount-input" placeholder="Add ₹">
-    <button onclick="addAmount()">Add</button>
-    <button onclick="resetAmount()">Reset</button>
 
-<script>
-    let goal = 105000;
-    let saved = parseInt(localStorage.getItem('savedAmount')) || 0;
-    
-    function updateDisplay() {
-        let percent = Math.min((saved / goal) * 100, 100);
-        document.getElementById("progress-bar").style.width = percent + "%";
-        document.getElementById("amount-display").innerText = 
-            `₹${saved.toLocaleString()} / ₹${goal.toLocaleString()}`;
-    }
-    
-    function addAmount() {
-        let amt = parseInt(document.getElementById("amount-input").value);
-        if (!isNaN(amt) && amt > 0) {
-            saved += amt;
-            localStorage.setItem('savedAmount', saved);
-            updateDisplay();
-            document.getElementById("amount-input").value = '';
-        }
-    }
+<h1>🏍️ Bike Savings Tracker</h1>
 
-    function resetAmount() {
-        if (confirm("Reset savings to 0?")) {
-            saved = 0;
-            localStorage.setItem('savedAmount', saved);
-            updateDisplay();
-        }
-    }
+<div class="tracker">
+    <div class="fill" id="fill"></div>
+</div>
 
-    updateDisplay();
-</script>
-</body>
-</html>
+<div class="stats">
+    Saved: ₹<span id="saved">0</span> / ₹<span id="goal">105000</span>
+</div>
+
+<div>
+    <input type="number" id="amount" p
