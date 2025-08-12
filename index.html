@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Money Tracker</title>
+<title>Cycle Savings Tracker</title>
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #111;
+        background-color: #111;
         color: white;
+        font-family: Arial, sans-serif;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -16,139 +16,135 @@
         height: 100vh;
         margin: 0;
     }
+
     h1 {
         margin-bottom: 20px;
     }
-    .progress-container {
-        width: 90%;
-        max-width: 400px;
-        background-color: #333;
-        border-radius: 25px;
+
+    .tracker {
+        width: 400px;
+        height: 60px;
+        border: 3px solid white;
+        background-color: black;
+        position: relative;
         overflow: hidden;
-        position: relative;
-        height: 40px;
+        border-radius: 8px;
     }
-    .progress-bar {
-        background-color: orange;
+
+    .fill {
         height: 100%;
+        background-color: yellow;
         width: 0%;
-        transition: width 0.3s ease-in-out;
-        position: relative;
+        transition: width 0.5s ease-in-out;
+    }
+
+    .stats {
+        margin-top: 15px;
+        font-size: 20px;
         text-align: center;
-        white-space: nowrap;
     }
-    .progress-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-weight: bold;
-        color: black;
+
+    .percentages {
+        margin-top: 8px;
+        font-size: 18px;
+        text-align: center;
     }
-    .progress-text-outside {
-        position: absolute;
-        top: 50%;
-        left: 105%;
-        transform: translateY(-50%);
-        font-weight: bold;
-        color: yellow;
-    }
-    .controls {
-        margin-top: 20px;
-        display: flex;
-        gap: 10px;
-    }
+
     input {
-        padding: 8px;
-        width: 100px;
-        border-radius: 5px;
+        padding: 10px;
+        margin: 5px;
         border: none;
+        border-radius: 4px;
+        width: 150px;
     }
+
     button {
-        padding: 8px 12px;
-        border: none;
-        border-radius: 5px;
-        background: orange;
+        padding: 10px 16px;
+        background-color: yellow;
+        color: black;
         font-weight: bold;
+        border: none;
+        border-radius: 4px;
         cursor: pointer;
+        margin: 5px;
     }
+
     button:hover {
-        background: gold;
+        background-color: gold;
     }
 </style>
 </head>
 <body>
 
-<h1>Money Tracker</h1>
-<div class="progress-container">
-    <div class="progress-bar" id="progressBar">
-        <span class="progress-text" id="progressText"></span>
-        <span class="progress-text-outside" id="progressTextOutside"></span>
-    </div>
+<h1>🚴‍♂️ Cycle Savings Tracker</h1>
+
+<div class="tracker">
+    <div class="fill" id="fill"></div>
 </div>
 
-<div class="controls">
-    <input type="number" id="amount" placeholder="Amount">
-    <button onclick="addMoney()">Add</button>
-    <button onclick="spendMoney()">Spend</button>
+<div class="stats">
+    Saved: ₹<span id="saved">0</span> / ₹<span id="goal">105000</span>
+</div>
+
+<div class="percentages">
+    Achieved: <span id="achieved">0%</span> | Left: <span id="left">100%</span>
+</div>
+
+<div>
+    <input type="number" id="amount" placeholder="Enter amount ₹">
+    <button onclick="addSavings()">Add</button>
+    <button onclick="subtractSavings()">Subtract</button>
 </div>
 
 <script>
-    let goal = 1000; // total target
-    let current = 0; // current saved
+    let goal = 105000;
+    let saved = 0;
 
-    function updateBar() {
-        let percent = (current / goal) * 100;
-        if (percent < 0) percent = 0;
-        if (percent > 100) percent = 100;
+    function updateTracker() {
+        let percentage = Math.max(0, Math.min((saved / goal) * 100, 100));
+        const fill = document.getElementById("fill");
 
-        const bar = document.getElementById("progressBar");
-        const textInside = document.getElementById("progressText");
-        const textOutside = document.getElementById("progressTextOutside");
+        // Update bar fill
+        fill.style.width = percentage + "%";
 
-        bar.style.width = percent + "%";
+        // Update saved text
+        document.getElementById("saved").innerText = saved;
 
-        let displayPercent = percent.toFixed(2) + "%";
-
-        if (percent > 15) {
-            textInside.textContent = displayPercent;
-            textInside.style.display = "block";
-            textOutside.style.display = "none";
-        } else {
-            textInside.style.display = "none";
-            textOutside.textContent = displayPercent;
-            textOutside.style.display = "block";
-        }
-
-        localStorage.setItem("moneyCurrent", current);
+        // Update percentage stats
+        document.getElementById("achieved").textContent = percentage.toFixed(2) + "%";
+        document.getElementById("left").textContent = (100 - percentage).toFixed(2) + "%";
     }
 
-    function addMoney() {
-        let amt = parseFloat(document.getElementById("amount").value);
-        if (!isNaN(amt) && amt > 0) {
-            current += amt;
-            updateBar();
+    function addSavings() {
+        let amount = parseFloat(document.getElementById("amount").value);
+        if (!isNaN(amount) && amount > 0) {
+            saved += amount;
+            updateTracker();
+            document.getElementById("amount").value = "";
         }
-        document.getElementById("amount").value = "";
     }
 
-    function spendMoney() {
-        let amt = parseFloat(document.getElementById("amount").value);
-        if (!isNaN(amt) && amt > 0) {
-            current -= amt;
-            updateBar();
+    function subtractSavings() {
+        let amount = parseFloat(document.getElementById("amount").value);
+        if (!isNaN(amount) && amount > 0) {
+            saved -= amount;
+            if (saved < 0) saved = 0;
+            updateTracker();
+            document.getElementById("amount").value = "";
         }
-        document.getElementById("amount").value = "";
     }
 
-    // Load saved progress
-    window.onload = function () {
-        let saved = localStorage.getItem("moneyCurrent");
-        if (saved) {
-            current = parseFloat(saved);
+    window.onload = function() {
+        let stored = localStorage.getItem("savedAmount");
+        if (stored) {
+            saved = parseFloat(stored);
+            updateTracker();
         }
-        updateBar();
-    }
+    };
+
+    setInterval(() => {
+        localStorage.setItem("savedAmount", saved);
+    }, 1000);
 </script>
 
 </body>
