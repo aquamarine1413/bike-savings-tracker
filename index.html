@@ -21,6 +21,38 @@
         margin-bottom: 20px;
     }
 
+    .progress-container {
+        position: relative;
+        width: 100%;
+        background-color: grey;
+        height: 30px;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .fill {
+        height: 100%;
+        background-color: yellow;
+        width: 0%;
+        transition: width 0.5s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: black;
+        font-size: 18px;
+    }
+
+    .percent-text {
+        position: absolute;
+        top: 50%;
+        left: 10px; /* show just outside left */
+        transform: translateY(-50%);
+        font-weight: bold;
+        font-size: 18px;
+        pointer-events: none;
+    }
+
     .tracker {
         width: 400px;
         height: 60px;
@@ -31,22 +63,7 @@
         border-radius: 8px;
     }
 
-    .fill {
-    height: 100%;
-    background-color: yellow;
-    width: 0%;
-    transition: width 0.5s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: black;
-    font-size: 18px;
-    padding: 0 8px;      /* add horizontal padding */
-    box-sizing: border-box;
-    min-width: 50px;     /* minimum width so text stays visible */
-}
-
+   
     .stats {
         margin-top: 15px;
         font-size: 20px;
@@ -98,12 +115,27 @@
     let goal = 105000;
     let saved = 0;
 
-    function updateTracker() {
-    let percentage = Math.max(0, Math.min((saved / goal) * 100, 100));
-    document.getElementById("fill").style.width = percentage + "%";
-    document.getElementById("fill").innerText = percentage.toFixed(2) + "%";
-    document.getElementById("saved").innerText = saved;
-}
+    function updateTracker(amount, goal) {
+        const fill = document.querySelector('.fill');
+        const percentTextOutside = document.querySelector('.percent-text');
+        
+        let percentage = (amount / goal) * 100;
+        if (percentage > 100) percentage = 100;
+        const percentageDisplay = percentage.toFixed(2) + '%';
+    
+        fill.style.width = percentage + '%';
+    
+        if (percentage < 15) { 
+            // Show text outside bar
+            fill.textContent = '';
+            percentTextOutside.textContent = percentageDisplay;
+        } else {
+            // Show text inside bar
+            fill.textContent = percentageDisplay;
+            percentTextOutside.textContent = '';
+        }
+    }
+
 
     function addSavings() {
         let amount = parseInt(document.getElementById("amount").value);
